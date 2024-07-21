@@ -5,8 +5,11 @@
 
 import sys
 import requests
+import json
+import base64
 from lxml import etree
 import re
+
 sys.path.append('..')
 from base.spider import Spider
 
@@ -25,10 +28,139 @@ class Spider(Spider):
         pass
 
     def homeContent(self, filter):
-        return {'class': [{'type_id': '1', 'type_name': '国产动漫'},
-                          {'type_id': '2', 'type_name': '日本动漫'},
-                          {'type_id': '3', 'type_name': '欧美动漫'},
-                          {'type_id': '4', 'type_name': '电影'}]}
+        return {
+            'class': [{'type_id': '1', 'type_name': '国产动漫'},
+                      {'type_id': '2', 'type_name': '日本动漫'},
+                      {'type_id': '3', 'type_name': '欧美动漫'},
+                      {'type_id': '4', 'type_name': '电影'}],
+            'filters': {
+                '1': [{'key': 'type',
+                       'name': '类型',
+                       'value': [{'n': '全部', 'v': ''},
+                                 {'n': '奇幻', 'v': '奇幻'},
+                                 {'n': '战斗', 'v': '战斗'},
+                                 {'n': '玄幻', 'v': '玄幻'},
+                                 {'n': '穿越', 'v': '穿越'},
+                                 {'n': '科幻', 'v': '科幻'},
+                                 {'n': '武侠', 'v': '武侠'},
+                                 {'n': '热血', 'v': '热血'},
+                                 {'n': '耽美', 'v': '耽美'},
+                                 {'n': '搞笑', 'v': '搞笑'},
+                                 {'n': '动态漫画', 'v': '动态漫画'}]},
+                      {'key': 'year',
+                       'name': '时间',
+                       'value': [{'n': '全部', 'v': ''},
+                                 {'n': '2024', 'v': '2024'},
+                                 {'n': '2023', 'v': '2023'},
+                                 {'n': '2022', 'v': '2022'},
+                                 {'n': '2021', 'v': '2021'},
+                                 {'n': '2020', 'v': '2020'},
+                                 {'n': '2019', 'v': '2019'},
+                                 {'n': '2018', 'v': '2018'},
+                                 {'n': '2017', 'v': '2017'},
+                                 {'n': '2016', 'v': '2016'},
+                                 {'n': '2015', 'v': '2015'}]},
+                      {'key': 'by',
+                       'name': '排序',
+                       'value': [{'n': '按时间', 'v': 'time'},
+                                 {'n': '按人气', 'v': 'hits'},
+                                 {'n': '按评分', 'v': 'score'}]}],
+                '2': [{'key': 'type',
+                       'name': '类型',
+                       'value': [{'n': '全部', 'v': ''},
+                                 {'n': '冒险', 'v': '冒险'},
+                                 {'n': '奇幻', 'v': '奇幻'},
+                                 {'n': '战斗', 'v': '战斗'},
+                                 {'n': '后宫', 'v': '后宫'},
+                                 {'n': '热血', 'v': '热血'},
+                                 {'n': '励志', 'v': '励志'},
+                                 {'n': '搞笑', 'v': '搞笑'},
+                                 {'n': '校园', 'v': '校园'},
+                                 {'n': '机战', 'v': '机战'},
+                                 {'n': '悬疑', 'v': '悬疑'},
+                                 {'n': '治愈', 'v': '治愈'},
+                                 {'n': '百合', 'v': '百合'},
+                                 {'n': '恐怖', 'v': '恐怖'},
+                                 {'n': '泡面番', 'v': '泡面番'},
+                                 {'n': '恋爱', 'v': '恋爱'},
+                                 {'n': '推理', 'v': '推理'}]},
+                      {'key': 'year',
+                       'name': '时间',
+                       'value': [{'n': '全部', 'v': ''},
+                                 {'n': '2024', 'v': '2024'},
+                                 {'n': '2023', 'v': '2023'},
+                                 {'n': '2022', 'v': '2022'},
+                                 {'n': '2021', 'v': '2021'},
+                                 {'n': '2020', 'v': '2020'},
+                                 {'n': '2019', 'v': '2019'},
+                                 {'n': '2018', 'v': '2018'},
+                                 {'n': '2017', 'v': '2017'},
+                                 {'n': '2016', 'v': '2016'},
+                                 {'n': '2015', 'v': '2015'}]},
+                      {'key': 'by',
+                       'name': '排序',
+                       'value': [{'n': '按时间', 'v': 'time'},
+                                 {'n': '按人气', 'v': 'hits'},
+                                 {'n': '按评分', 'v': 'score'}]}],
+                '3': [{'key': 'type',
+                       'name': '类型',
+                       'value': [{'n': '全部', 'v': ''},
+                                 {'n': '科幻', 'v': '科幻'},
+                                 {'n': '冒险', 'v': '冒险'},
+                                 {'n': '战斗', 'v': '战斗'},
+                                 {'n': '百合', 'v': '百合'},
+                                 {'n': '奇幻', 'v': '奇幻'},
+                                 {'n': '热血', 'v': '热血'},
+                                 {'n': '搞笑', 'v': '搞笑'}]},
+                      {'key': 'year',
+                       'name': '时间',
+                       'value': [{'n': '全部', 'v': ''},
+                                 {'n': '2024', 'v': '2024'},
+                                 {'n': '2023', 'v': '2023'},
+                                 {'n': '2022', 'v': '2022'},
+                                 {'n': '2021', 'v': '2021'},
+                                 {'n': '2020', 'v': '2020'},
+                                 {'n': '2019', 'v': '2019'},
+                                 {'n': '2018', 'v': '2018'},
+                                 {'n': '2017', 'v': '2017'},
+                                 {'n': '2016', 'v': '2016'},
+                                 {'n': '2015', 'v': '2015'}]},
+                      {'key': 'by',
+                       'name': '排序',
+                       'value': [{'n': '按时间', 'v': 'time'},
+                                 {'n': '按人气', 'v': 'hits'},
+                                 {'n': '按评分', 'v': 'score'}]}],
+                '4': [{'key': 'type',
+                       'name': '类型',
+                       'value': [{'n': '全部', 'v': ''},
+                                 {'n': '搞笑', 'v': '搞笑'},
+                                 {'n': '奇幻', 'v': '奇幻'},
+                                 {'n': '治愈', 'v': '治愈'},
+                                 {'n': '科幻', 'v': '科幻'},
+                                 {'n': '喜剧', 'v': '喜剧'},
+                                 {'n': '冒险', 'v': '冒险'},
+                                 {'n': '动作', 'v': '动作'},
+                                 {'n': '爱情', 'v': '爱情'}]},
+                      {'key': 'year',
+                       'name': '时间',
+                       'value': [{'n': '全部', 'v': ''},
+                                 {'n': '2024', 'v': '2024'},
+                                 {'n': '2023', 'v': '2023'},
+                                 {'n': '2022', 'v': '2022'},
+                                 {'n': '2021', 'v': '2021'},
+                                 {'n': '2020', 'v': '2020'},
+                                 {'n': '2019', 'v': '2019'},
+                                 {'n': '2018', 'v': '2018'},
+                                 {'n': '2017', 'v': '2017'},
+                                 {'n': '2016', 'v': '2016'},
+                                 {'n': '2015', 'v': '2015'}]},
+                      {'key': 'by',
+                       'name': '排序',
+                       'value': [{'n': '按时间', 'v': 'time'},
+                                 {'n': '按人气', 'v': 'hits'},
+                                 {'n': '按评分', 'v': 'score'}]}]
+            }
+        }
 
     def homeVideoContent(self):
         video_list = []
@@ -53,9 +185,18 @@ class Spider(Spider):
         return {'list': video_list}
 
     def categoryContent(self, cid, page, filter, ext):
+        _by = ''
+        _type = ''
+        _year = ''
+        if ext.get('by'):
+            _by = ext.get('by')
+        if ext.get('type'):
+            _type = ext.get('type')
+        if ext.get('year'):
+            _type = ext.get('year')
         video_list = []
         try:
-            res = requests.get(f'https://dm84.org/list-{cid}-{page}.html')
+            res = requests.get(f'https://dm84.org/show-{cid}--{_by}-{_type}--{_year}-{page}.html')
             root = etree.HTML(res.text)
             data_list = root.xpath('//li/div[@class="item"]')
             print(len(data_list))
@@ -80,8 +221,8 @@ class Spider(Spider):
         try:
             res = requests.get(f'https://dm84.org/v/{did[0]}.html')
             root = etree.HTML(res.text)
-            vod_play_from = '$$$'.join(root.xpath('//ul[@class="tab_control play_from"]/li[@class="current"]/text()')) # //ul[contains(@class, "abc")]
-            play_list = root.xpath('//ul[@class="play_list current"]')
+            vod_play_from = '$$$'.join(root.xpath('//ul[contains(@class, "play_from")]/li/text()'))
+            play_list = root.xpath('//ul[contains(@class, "play_list")]')
             vod_play_url = []
             for i in play_list:
                 name_list = i.xpath('./li/a/text()')
@@ -168,7 +309,7 @@ class Spider(Spider):
         except requests.RequestException as e:
             return {'url': play_url, 'msg': e, 'parse': 0, 'jx': 0, 'header': self.header}
 
-        return {"url": play_url,"header": self.header, "parse": 0, "jx": 0}
+        return {"url": play_url, "header": self.header, "parse": 0, "jx": 0}
 
     def localProxy(self, params):
         pass

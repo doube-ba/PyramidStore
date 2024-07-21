@@ -37,7 +37,7 @@ class Spider(Spider):
 		try:
 			embyInfos = self.getAccessToken()
 		except:
-			return {'msg': '获取Emby服务器信息出错1111'}
+			return {'msg': '获取Emby服务器信息出错'}
 
 		header = self.header.copy()
 		header['Content-Type'] = "application/json; charset=UTF-8"
